@@ -13703,19 +13703,7 @@ Make sure to keep track of the various features and conditions you tried before 
         <span class="c1"># Remove the &#39;pass&#39; statement below </span>
         <span class="c1"># and write your prediction conditions here</span>
         
-        <span class="c1"># I found that fare &gt; 100 is a good predtion of survival.</span>
-        <span class="c1"># But, again it was biased towards female.</span>
-        
-        <span class="c1"># I used fare &lt; 40, or fare &lt; 20 to show non-survival.</span>
-        <span class="c1"># Didn&#39;t work.</span>
-        <span class="c1"># I guess, the previous if-conditions (or trees, in our case) already took care of such situations.</span>
-        
-        <span class="c1"># Pclass was another good indicator.</span>
-        <span class="c1"># My guess is that Pclass == 3, is the lower class.</span>
-        <span class="c1"># So, a male with Pclass == 3, was sure not going to survive.</span>
-        
-        <span class="c1"># I had to play around with the Age feature to finally push the prediction over 80%.</span>
-        <span class="c1"># For a long time, I was stuck at 79.91%.</span>
+
         
         <span class="k">if</span> <span class="n">passenger</span><span class="p">[</span><span class="s1">&#39;Fare&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">passenger</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;female&#39;</span><span class="p">:</span>
             <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -13785,7 +13773,21 @@ Make sure to keep track of the various features and conditions you tried before 
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer</strong>: <em>Predictions have an accuracy of 80.02%.</em></p>
+<p><strong>Answer</strong>: *Predictions have an accuracy of 80.02%.</p>
+
+<pre><code>    # I found that fare &gt; 100 is a good predtion of survival.
+    # But, again it was biased towards female.
+
+    # I used fare &lt; 40, or fare &lt; 20 to show non-survival.
+    # Didn't work.
+    # I guess, the previous if-conditions (or trees, in our case) already took care of such situations.
+
+    # Pclass was another good indicator.
+    # My guess is that Pclass == 3, is the lower class.
+    # So, a male with Pclass == 3, was sure not going to survive.
+
+    # I had to play around with the Age feature to finally push the prediction over 80%.
+    # For a long time, I was stuck at 79.91%.*</code></pre>
 
 </div>
 </div>
