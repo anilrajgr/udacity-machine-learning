@@ -85,10 +85,11 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
         if self.learning == True:
-            if state not in self.Q:
-                self.Q[state] = {None: 0.0, 'forward': 0.0, 'left': 0.0, 'right': 0.0}
+            state_hash = hash(repr(state))
+            if state_hash not in self.Q:
+                self.Q[state_hash] = {None: 0.0, 'forward': 0.0, 'left': 0.0, 'right': 0.0}
 
-        print self.Q
+        # print self.Q
         return
 
 
@@ -165,7 +166,7 @@ def run():
     # Follow the driving agent
     # Flags:
     #   enforce_deadline - set to True to enforce a deadline metric
-    env.set_primary_agent(agent)
+    env.set_primary_agent(agent, enforce_deadline=True)
 
     ##############
     # Create the simulation
@@ -181,7 +182,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run()
+    sim.run(n_test=1)
 
 
 if __name__ == '__main__':
