@@ -39,6 +39,12 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
+        if testing:
+            self.epsilon = 0
+            self.alpha = 0
+        else:
+            # ANIL: TODO. Only after 1st iteration, this should change
+            self.epsilon = self.epsilon - 0.05
 
         return None
 
@@ -69,10 +75,19 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-
         maxQ = None
-
         return maxQ 
+
+    def get_maxQ_action(self, state):
+        """ The get_max_Q function is called when the agent is asked to find the
+            maximum Q-value of all actions based on the 'state' the smartcab is in. """
+
+        ########### 
+        ## TO DO ##
+        ###########
+        # Calculate the maximum Q-value of all actions for a given state
+        state_hash = hash(repr(state))
+        return max(self.Q[state_hash], key=lambda key: self.Q[state_hash][key])
 
 
     def createQ(self, state):
@@ -92,7 +107,6 @@ class LearningAgent(Agent):
         # print self.Q
         return
 
-
     def choose_action(self, state):
         """ The choose_action function is called when the agent is asked to choose
             which action to take, based on the 'state' the smartcab is in. """
@@ -110,6 +124,15 @@ class LearningAgent(Agent):
         #   Otherwise, choose an action with the highest Q-value for the current state
         if self.learning == False:
             action = random.choice(self.valid_actions)
+        else:
+            state_hash = hash(repr(state))
+            if state_hash in self.Q:
+                if (self.epsilon > random.uniform(0, 1)):
+                    action = random.choice(self.valid_actions)
+                else:
+                    action = self.get_maxQ_action(state)
+            else:
+                action = random.choice(self.valid_actions)
  
         return action
 
@@ -124,6 +147,10 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
+        state_hash = hash(repr(state))
+        # ANIL TODO
+        self.Q[state_hash][action] = (1-self.alpha) * self.Q[state_hash][action] + self.alpha * reward
+        # print self.Q
 
         return
 
@@ -160,7 +187,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1.05)
     
     ##############
     # Follow the driving agent
@@ -175,14 +202,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env)
+    sim = Simulator(env, update_delay=0.01, log_metrics=True)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=1)
+    sim.run(n_test=10)
 
 
 if __name__ == '__main__':
