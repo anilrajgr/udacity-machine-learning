@@ -3,6 +3,7 @@ import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
+from IPython.display import display
 
 class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
@@ -44,7 +45,7 @@ class LearningAgent(Agent):
             self.alpha = 0
         else:
             # ANIL: TODO. Only after 1st iteration, this should change
-            self.epsilon = self.epsilon - 0.05
+            self.epsilon = self.epsilon - 0.001
 
         return None
 
@@ -62,7 +63,8 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs, deadline)
+        # state = (waypoint, inputs, deadline)
+        state = (waypoint, inputs)
 
         return state
 
@@ -87,7 +89,12 @@ class LearningAgent(Agent):
         ###########
         # Calculate the maximum Q-value of all actions for a given state
         state_hash = hash(repr(state))
-        return max(self.Q[state_hash], key=lambda key: self.Q[state_hash][key])
+        # print("keys")
+        # print(state_hash)
+        # display(self.Q)
+        # Randomly select one out of the max values
+        return random.choice([key for key,val in self.Q[state_hash].iteritems() if val == max(self.Q[state_hash].values())])
+        # return max(self.Q[state_hash], key=lambda key: self.Q[state_hash][key])
 
 
     def createQ(self, state):
@@ -130,7 +137,9 @@ class LearningAgent(Agent):
                 if (self.epsilon > random.uniform(0, 1)):
                     action = random.choice(self.valid_actions)
                 else:
+                    # display(self.Q)
                     action = self.get_maxQ_action(state)
+                    # print(action)
             else:
                 action = random.choice(self.valid_actions)
  
@@ -150,7 +159,7 @@ class LearningAgent(Agent):
         state_hash = hash(repr(state))
         # ANIL TODO
         self.Q[state_hash][action] = (1-self.alpha) * self.Q[state_hash][action] + self.alpha * reward
-        # print self.Q
+        # display(self.Q)
 
         return
 
@@ -187,7 +196,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, epsilon=1.05)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1.001)
     
     ##############
     # Follow the driving agent
@@ -202,7 +211,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=0.01, log_metrics=True)
+    sim = Simulator(env, update_delay=0.0, log_metrics=True)
     
     ##############
     # Run the simulator
