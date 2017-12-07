@@ -158,8 +158,9 @@ class LearningAgent(Agent):
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         state_hash = hash(repr(state))
         # ANIL TODO
+        display(self.Q[state_hash][action])
         self.Q[state_hash][action] = (1-self.alpha) * self.Q[state_hash][action] + self.alpha * reward
-        # display(self.Q)
+        display(self.Q[state_hash][action])
 
         return
 
@@ -196,7 +197,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, epsilon=1.05)
+    agent = env.create_agent(LearningAgent, learning=True, epsilon=1.0)
     
     ##############
     # Follow the driving agent
