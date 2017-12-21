@@ -92,13 +92,10 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Calculate the maximum Q-value of all actions for a given state
-        state_hash = hash(repr(state))
         # print("keys")
-        # print(state_hash)
         # display(self.Q)
         # Randomly select one out of the max values
-        return random.choice([key for key,val in self.Q[state_hash].iteritems() if val == max(self.Q[state_hash].values())])
-        # return max(self.Q[state_hash], key=lambda key: self.Q[state_hash][key])
+        return random.choice([key for key,val in self.Q[repr(state)].iteritems() if val == max(self.Q[repr(state)].values())])
 
 
     def createQ(self, state):
@@ -111,9 +108,8 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
         if self.learning == True:
-            state_hash = hash(repr(state))
-            if state_hash not in self.Q:
-                self.Q[state_hash] = {None: 0.0, 'forward': 0.0, 'left': 0.0, 'right': 0.0}
+            if repr(state) not in self.Q:
+                self.Q[repr(state)] = {None: 0.0, 'forward': 0.0, 'left': 0.0, 'right': 0.0}
 
         # print self.Q
         return
@@ -136,8 +132,7 @@ class LearningAgent(Agent):
         if self.learning == False:
             action = random.choice(self.valid_actions)
         else:
-            state_hash = hash(repr(state))
-            if state_hash in self.Q:
+            if repr(state) in self.Q:
                 if (self.epsilon > random.uniform(0, 1)):
                     action = random.choice(self.valid_actions)
                 else:
@@ -160,11 +155,10 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        state_hash = hash(repr(state))
         # ANIL TODO
-        display(self.Q[state_hash][action])
-        self.Q[state_hash][action] = (1-self.alpha) * self.Q[state_hash][action] + self.alpha * reward
-        display(self.Q[state_hash][action])
+        display(self.Q[repr(state)][action])
+        self.Q[repr(state)][action] = (1-self.alpha) * self.Q[repr(state)][action] + self.alpha * reward
+        display(self.Q[repr(state)][action])
 
         return
 
@@ -224,6 +218,11 @@ def run():
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
     sim.run(n_test=10, tolerance=0.01)
+
+    # Print 10 random entries from self.Q
+    # Used for analysis
+    for i in range(0,10):
+        print random.choice(agent.Q.keys())
 
 
 if __name__ == '__main__':
