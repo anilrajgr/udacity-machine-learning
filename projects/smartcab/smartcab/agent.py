@@ -156,9 +156,10 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         # ANIL TODO
-        display(self.Q[repr(state)][action])
-        self.Q[repr(state)][action] = (1-self.alpha) * self.Q[repr(state)][action] + self.alpha * reward
-        display(self.Q[repr(state)][action])
+        if self.learning == True:
+            display(self.Q[repr(state)][action])
+            self.Q[repr(state)][action] = (1-self.alpha) * self.Q[repr(state)][action] + self.alpha * reward
+            display(self.Q[repr(state)][action])
 
         return
 
